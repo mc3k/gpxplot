@@ -52,7 +52,7 @@ Options:
 import sys
 import datetime
 import getopt
-from string import join
+#from string import join
 from math import sqrt,sin,cos,asin,pi,ceil
 from os.path import basename
 from re import sub
@@ -202,7 +202,7 @@ def parse_gpx_data(gpxdata,tzname=None,npoints=None):
 				try:
 					import lxml.etree as ET
 				except:
-					print 'this script needs ElementTree (Python>=2.5)'
+					print('this script needs ElementTree (Python>=2.5)')
 					sys.exit(EXIT_EDEPENDENCY)
 
 	def find_trksegs_or_route(etree, ns):
@@ -280,7 +280,7 @@ def google_ext_encode_data(trk,x,y,min_x,max_x,min_y,max_y,metric=True):
 
 def google_chart_url(trk,x,y,metric=True):
 	if x != var_dist or y != var_ele:
-		print 'only distance-elevation profiles are supported in --google mode'
+		print('only distance-elevation profiles are supported in --google mode')
 		return
 	if not trk:
 		raise ValueError("Parsed track is empty")
@@ -351,7 +351,7 @@ def gen_gnuplot_script(trk,x,y,file=sys.stdout,metric=True,savefig=None):
 		elif ext == 'svg':
 			file.write("set terminal svg; set output '%s';\n"%(savefig))
 		else:
-			print 'unsupported file type: %s'%ext
+			print('unsupported file type: %s'%ext)
 			sys.exit(EXIT_EFORMAT)
 	file.write("plot '-' u %d:%d w l\n"%(x-1,y-1,))
 	print_gpx_trk(trk,file=file,metric=metric)
@@ -374,11 +374,11 @@ def plot_in_gnuplot(trk,x,y,metric=True,savefig=None):
 			g=Gnuplot.Gnuplot()
 		g(script)
 	except: # python-gnuplot is not available or is broken
-		print 'gnuplot.py is not found'
+		print('gnuplot.py is not found')
 
 def print_gnuplot_script(trk,x,y,metric=True,savefig=None):
 	script=get_gnuplot_script(trk,x,y,metric,savefig)
-	print script
+	print(script)
 
 def main():
 	metric=True
@@ -389,17 +389,17 @@ def main():
 	tzname=None
 	npoints=None
 	def print_see_usage():
-		print 'see usage: ' + basename(sys.argv[0]) + ' --help'
+		print('see usage: ' + basename(sys.argv[0]) + ' --help')
 
 	try: opts,args=getopt.getopt(sys.argv[1:],'hgEx:y:o:t:n:',
 			['help','gprint','google','table'])
-	except Exception, e:
-		print e
+	except Exception(e):
+		print(e)
 		print_see_usage()
 		sys.exit(EXIT_EOPTION)
 	for o, a in opts:
 		if o in ['-h','--help']:
-			print __doc__
+			print(__doc__)
 			sys.exit(0)
 		if o == '-E':
 			metric=False
@@ -412,34 +412,34 @@ def main():
 		if o == '--table':
 			action='printtable'
 		if o == '-x':
-			if var_names.has_key(a):
+			if a in var_names:
 				xvar=var_names[a]
 			else:
-				print 'unknown x variable'
+				print('unknown x variable')
 				print_see_usage()
 				sys.exit(EXIT_EOPTION)
 		if o == '-y':
-			if var_names.has_key(a):
+			if a in var_names:
 				yvar=var_names[a]
 			else:
-				print 'unknown y variable'
+				print('unknown y variable')
 				print_see_usage()
 				sys.exit(EXIT_EOPTION)
 		if o == '-o':
 			imagefile=a
 		if o == '-t':
-			if not globals().has_key('pytz'):
-				print 'pytz module is required to change timezone'
+			if not 'pytz' in globals():
+				print('pytz module is required to change timezone')
 				sys.exit(EXIT_EDEPENDENCY)
 			tzname=a
 		if o == '-n':
 			npoints=int(a)
 	if len(args) > 1:
-		print 'only one GPX file should be specified'
+		print('only one GPX file should be specified')
 		print_see_usage()
 		sys.exit(EXIT_EOPTION)
 	elif len(args) == 0:
-		print 'please provide a GPX file to process.'
+		print('please provide a GPX file to process.')
 		print_see_usage()
 		sys.exit(EXIT_EOPTION)
 
@@ -452,7 +452,7 @@ def main():
 	elif action == 'printtable':
 		print_gpx_trk(trk,metric=metric)
 	elif action == 'googlechart':
-		print google_chart_url(trk,x=xvar,y=yvar,metric=metric)
+		print(google_chart_url(trk,x=xvar,y=yvar,metric=metric))
 
 if __name__ == '__main__':
 	main()
